@@ -20,7 +20,7 @@ class ChatApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         LoginPage.id: (context) => const LoginPage(),
-        RegisterPage.id: (context) => RegisterPage(),
+        RegisterPage.id: (context) => const RegisterPage(),
       },
       initialRoute: LoginPage.id,
     );

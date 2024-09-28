@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
-class TextContainer extends StatelessWidget {
-   TextContainer({
+class TextFormContainer extends StatelessWidget {
+  TextFormContainer({
     super.key,
     required this.hintText,
-        this.onChange,
-
+    this.onChange,
   });
 
   final String? hintText;
-    Function(String)? onChange;
-
+  Function(String)? onChange;
 
   @override
   Widget build(BuildContext context) {

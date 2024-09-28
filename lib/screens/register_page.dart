@@ -1,105 +1,139 @@
-import 'package:chat_app/widgets/custom_buttom.dart';
+import 'dart:developer';
+
+import 'package:chat_app/helper/show_snak_bar.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../widgets/custom_buttom.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/widgets/constants.dart';
-import 'package:chat_app/widgets/text_container.dart';
+import '../widgets/constants.dart';
+import '../widgets/text_container.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   static String id = 'RegisterPage';
+
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   String? email;
+
   String? password;
 
-  RegisterPage({super.key});
+  GlobalKey<FormState> globalKey = GlobalKey();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            const Spacer(flex: 2),
-            Image.asset('assets/images/scholar.png'),
-            const Text(
-              'Scolar Chat',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontFamily: 'Pacifico',
-              ),
-            ),
-            const Spacer(flex: 2),
-            const Row(
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Form(
+            key: globalKey,
+            child: ListView(
               children: [
-                Text(
-                  'Register',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                Column(
+                  children: [
+                    Image.asset('assets/images/scholar.png'),
+                    const Text(
+                      'Scolar Chat',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'Pacifico',
+                      ),
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          'Register',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    TextFormContainer(
+                      hintText: 'Email',
+                      onChange: (data) {
+                        email = data;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormContainer(
+                      hintText: 'Password',
+                      onChange: (data) {
+                        password = data;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    CustomButton(
+                      text: 'Register',
+                      onTap: () async {
+                        if (globalKey.currentState!.validate()) {
+                          isLoading = true;
+                          setState(() {});
+                          try {
+                            await registerUser();
+                            ShowSnakBar(context, 'Success');
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              ShowSnakBar(context, 'Weak Password');
+                              log('Weak Password');
+                            } else if (e.code == 'email-already-in-use') {
+                              ShowSnakBar(context, 'Email Already Exists');
+                              log('Email Already Exists');
+                            }
+                          } catch (e) {
+                            ShowSnakBar(context, 'There Was An Error');
+                          }
+                          isLoading = false;
+                          setState(() {});
+                        } else {}
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Already have an account?",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            print('from register to login');
+                          },
+                          child: const Text(
+                            '  Login',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            TextContainer(
-              hintText: 'Email',
-              onChange: (data) {
-                email = data;
-              },
-            ),
-            const SizedBox(height: 10),
-            TextContainer(
-              hintText: 'Password',
-              onChange: (data) {
-                password = data;
-              },
-            ),
-            const SizedBox(height: 10),
-            CustomButton(
-              text: 'Register',
-              onTap: () async {
-                try {
-                  var auth = FirebaseAuth.instance;
-                  UserCredential user =
-                      await auth.createUserWithEmailAndPassword(
-                    email: email!,
-                    password: password!,
-                  );
-                  print('User registered: ${user.user!.email}');
-                } catch (e) {
-                  print('Error: $e');
-                  // Optionally show an error message to the user
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(
-                            'Registration failed: $e')),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Already have an account?",
-                  style: TextStyle(color: Colors.white),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    print('Navigating from register to login');
-                  },
-                  child: const Text(
-                    '  Login',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(flex: 3),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Future<void> registerUser() async {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email!,
+      password: password!,
     );
   }
 }
