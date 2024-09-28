@@ -1,6 +1,7 @@
-import 'package:chat_app/firebase_options.dart';
-import 'package:chat_app/screens/login_page.dart';
-import 'package:chat_app/screens/register_page.dart';
+import 'firebase_options.dart';
+import 'screens/chat_page.dart';
+import 'screens/login_page.dart';
+import 'screens/register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -17,12 +18,16 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        LoginPage.id: (context) => const LoginPage(),
-        RegisterPage.id: (context) => const RegisterPage(),
-      },
-      initialRoute: LoginPage.id,
+    return const MaterialApp(
+      // routes: {
+      //   LoginPage.id: (context) => const LoginPage(),
+      //   RegisterPage.id: (context) => const RegisterPage(),
+      //   ChatPage.id: (context) => const ChatPage(),
+      // },
+      // initialRoute: LoginPage.id,
+      home: Scaffold(
+        body: ChatPage(),
+      ),
     );
   }
 }

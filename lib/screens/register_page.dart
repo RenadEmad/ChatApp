@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:chat_app/helper/show_snak_bar.dart';
+import '../helper/show_snak_bar.dart';
+import 'chat_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../widgets/custom_buttom.dart';
@@ -41,7 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 Column(
                   children: [
-                    Image.asset('assets/images/scholar.png'),
+                    Image.asset(kLogo),
                     const Text(
                       'Scolar Chat',
                       style: TextStyle(
@@ -82,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           setState(() {});
                           try {
                             await registerUser();
-                            ShowSnakBar(context, 'Success');
+                            Navigator.pushNamed(context, ChatPage.id);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               ShowSnakBar(context, 'Weak Password');

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:chat_app/helper/show_snak_bar.dart';
+import '../helper/show_snak_bar.dart';
+import 'chat_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 75,
                 ),
                 Image.asset(
-                  'assets/images/scholar.png',
+                  kLogo,
                   height: 100,
                 ),
                 const Row(
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {});
                         try {
                           await LoginUser();
-                          ShowSnakBar(context, 'Success');
+                          Navigator.pushNamed(context, ChatPage.id);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             ShowSnakBar(
@@ -104,6 +105,9 @@ class _LoginPageState extends State<LoginPage> {
                                 'Wrong password provided for that user');
                             log('Wrong password provided for that user');
                             log(e.code.toString());
+                          } else if (e.code == 'invalid-credential') {
+                            ShowSnakBar(context, 'Invalid Credential');
+                            log(e.code);
                           }
                         } catch (e) {
                           ShowSnakBar(context, 'There Was An Error');
@@ -111,7 +115,9 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         isLoading = false;
                         setState(() {});
-                      } else {}
+                      } else {
+                        log('fdddddddddddddddddddddddddddddddddddddd');
+                      }
                     }),
                 const SizedBox(
                   height: 15,
