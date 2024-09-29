@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+
 import 'firebase_options.dart';
 import 'screens/chat_page.dart';
 import 'screens/login_page.dart';
@@ -10,7 +12,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const ChatApp());
+  runApp(DevicePreview(
+    enabled: true,
+    builder: (context) => const ChatApp(),
+  ));
 }
 
 class ChatApp extends StatelessWidget {
@@ -18,7 +23,10 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       // routes: {
       //   LoginPage.id: (context) => const LoginPage(),
       //   RegisterPage.id: (context) => const RegisterPage(),
