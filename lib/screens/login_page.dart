@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 TextFormContainer(
+                    obscureText: true,
                     onChange: (data) {
                       password = data;
                     },
@@ -93,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {});
                         try {
                           await LoginUser();
-                          Navigator.pushNamed(context, ChatPage.id);
+                          Navigator.pushNamed(context, ChatPage.id,
+                              arguments: email);
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             ShowSnakBar(

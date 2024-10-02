@@ -27,14 +27,14 @@ class ChatApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
-      // routes: {
-      //   LoginPage.id: (context) => const LoginPage(),
-      //   RegisterPage.id: (context) => const RegisterPage(),
-      //   ChatPage.id: (context) => const ChatPage(),
-      // },
-      // initialRoute: LoginPage.id,
-      home: Scaffold(
-        body: ChatPage(),
+      routes: {
+        LoginPage.id: (context) => const LoginPage(),
+        RegisterPage.id: (context) => const RegisterPage(),
+        ChatPage.id: (context) => ChatPage(),
+      },
+      initialRoute: LoginPage.id,
+      home: const Scaffold(
+        body: LoginPage(),
       ),
     );
   }

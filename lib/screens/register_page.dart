@@ -63,6 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 15),
                     TextFormContainer(
                       hintText: 'Email',
+                      obscureText: false,
                       onChange: (data) {
                         email = data;
                       },
@@ -70,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 10),
                     TextFormContainer(
                       hintText: 'Password',
+                      obscureText: true,
                       onChange: (data) {
                         password = data;
                       },
